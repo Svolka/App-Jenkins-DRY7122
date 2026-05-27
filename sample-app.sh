@@ -1,3 +1,4 @@
+rm -rf tempdir
 mkdir tempdir/templates
 mkdir tempdir/static
 
