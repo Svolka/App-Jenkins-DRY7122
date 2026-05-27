@@ -17,7 +17,7 @@ CMD ["python", "/home/myapp/sample_app.py"]
 DOCKERFILE
 
 cd tempdir
-docker build -t sampleapp .
+docker build --no-cache -t sampleapp .
 docker rm -f samplerunning 2>/dev/null || true
 docker run -t -d -p 9999:9999 --name samplerunning sampleapp
 docker ps -a
