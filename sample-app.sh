@@ -7,7 +7,8 @@ cp -r templates/* tempdir/templates/.
 cp -r static/* tempdir/static/.
 
 echo "FROM python:3.9" > tempdir/Dockerfile
-echo "RUN pip install --no-cache-dir flask" >> tempdir/Dockerfile
+# AQUÍ ESTÁ LA MAGIA: Instalación silenciosa y sin barra de progreso
+echo "RUN pip install -q --no-cache-dir --disable-pip-version-check flask" >> tempdir/Dockerfile
 echo "COPY  ./static /home/myapp/static/" >> tempdir/Dockerfile
 echo "COPY  ./templates /home/myapp/templates/" >> tempdir/Dockerfile
 echo "COPY  sample_app.py /home/myapp/" >> tempdir/Dockerfile
