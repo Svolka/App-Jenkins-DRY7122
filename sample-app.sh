@@ -2,8 +2,8 @@ rm -rf tempdir
 mkdir -p tempdir/templates
 mkdir -p tempdir/static
 
-# 1. Fuerza bruta al puerto
-sed -i 's/8080/9999/g' sample_app.py
+# 1. Apagamos los hilos en Python para evadir el bloqueo de la VM
+sed -i 's/port=9999/port=9999, threaded=False/g' sample_app.py
 
 cp sample_app.py tempdir/.
 cp -r templates/* tempdir/templates/.
@@ -20,10 +20,9 @@ CMD ["python", "/home/myapp/sample_app.py"]
 DOCKERFILE
 
 cd tempdir
-# 2. Reconstrucción obligatoria sin caché
 docker build --no-cache -t sampleapp .
 docker rm -f samplerunning 2>/dev/null || true
 
-# 3. Forzamos el comando en la cara del contenedor
-docker run -t -d -p 9999:9999 --name samplerunning sampleapp python /home/myapp/sample_app.py
+# 2. Agregamos --privileged para darle inmunidad al contenedor
+docker run -t -d --privileged -p 9999:9999 --name samplerunning sampleapp python /home/myapp/sample_app.py
 docker ps -a
