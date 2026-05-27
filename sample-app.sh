@@ -2,7 +2,7 @@ rm -rf tempdir
 mkdir -p tempdir/templates
 mkdir -p tempdir/static
 
-# FUERZA BRUTA: Cambiamos el puerto en el código Python sí o sí
+# 1. Fuerza bruta al puerto
 sed -i 's/8080/9999/g' sample_app.py
 
 cp sample_app.py tempdir/.
@@ -20,7 +20,10 @@ CMD ["python", "/home/myapp/sample_app.py"]
 DOCKERFILE
 
 cd tempdir
-docker build -t sampleapp .
+# 2. Reconstrucción obligatoria sin caché
+docker build --no-cache -t sampleapp .
 docker rm -f samplerunning 2>/dev/null || true
-docker run -t -d -p 9999:9999 --name samplerunning sampleapp
+
+# 3. Forzamos el comando en la cara del contenedor
+docker run -t -d -p 9999:9999 --name samplerunning sampleapp python /home/myapp/sample_app.py
 docker ps -a
