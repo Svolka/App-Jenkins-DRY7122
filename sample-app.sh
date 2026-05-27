@@ -6,14 +6,15 @@ cp sample_app.py tempdir/.
 cp -r templates/* tempdir/templates/.
 cp -r static/* tempdir/static/.
 
-echo "FROM python:3.9" > tempdir/Dockerfile
-# AQUÍ ESTÁ LA MAGIA: Instalación silenciosa y sin barra de progreso
-echo "RUN pip install -q --no-cache-dir --disable-pip-version-check flask" >> tempdir/Dockerfile
-echo "COPY  ./static /home/myapp/static/" >> tempdir/Dockerfile
-echo "COPY  ./templates /home/myapp/templates/" >> tempdir/Dockerfile
-echo "COPY  sample_app.py /home/myapp/" >> tempdir/Dockerfile
-echo "EXPOSE 9999" >> tempdir/Dockerfile
-echo "CMD python /home/myapp/sample_app.py" >> tempdir/Dockerfile
+cat << 'DOCKERFILE' > tempdir/Dockerfile
+FROM python:3.9
+RUN pip install -q --no-cache-dir --disable-pip-version-check flask
+COPY  ./static /home/myapp/static/
+COPY  ./templates /home/myapp/templates/
+COPY  sample_app.py /home/myapp/
+EXPOSE 9999
+CMD ["python", "/home/myapp/sample_app.py"]
+DOCKERFILE
 
 cd tempdir
 docker build -t sampleapp .
